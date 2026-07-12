@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://show1005.github.io/lillip-apps/sitemap.xml
