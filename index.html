@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lillip Apps - 小さく、すぐ使えるiPhoneアプリ集</title>
+    <meta name="description" content="Lillip Appsは、個人開発の単機能iPhoneアプリをまとめたアプリ紹介サイトです。">
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f5ef;
+        --surface: #fffdf8;
+        --surface-strong: #ffffff;
+        --text: #1f2933;
+        --muted: #64748b;
+        --subtle: #8a94a6;
+        --line: #e4ded2;
+        --brand: #234c45;
+        --brand-2: #3d7c78;
+        --brand-soft: #e4f0ed;
+        --accent: #d68057;
+        --shadow: 0 18px 50px rgba(31, 41, 51, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 15% 0%, rgba(61, 124, 120, 0.16), transparent 32rem),
+          linear-gradient(180deg, #fffdf8 0%, var(--bg) 70%);
+        line-height: 1.7;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .page {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 22px 0;
+      }
+
+      .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      .brand-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        display: inline-grid;
+        place-items: center;
+        color: #fff;
+        background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        box-shadow: 0 10px 24px rgba(35, 76, 69, 0.18);
+      }
+
+      .nav-link {
+        color: var(--muted);
+        font-size: 0.92rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .nav-link:hover {
+        color: var(--brand);
+      }
+
+      .hero {
+        padding: 64px 0 46px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+        gap: 32px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 14px;
+        padding: 7px 12px;
+        border: 1px solid rgba(61, 124, 120, 0.22);
+        border-radius: 999px;
+        color: var(--brand);
+        background: rgba(255, 255, 255, 0.65);
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.5rem, 8vw, 5.2rem);
+        line-height: 0.95;
+        letter-spacing: -0.075em;
+        color: var(--brand);
+      }
+
+      .hero-copy {
+        margin: 22px 0 0;
+        color: var(--muted);
+        font-size: clamp(1rem, 2.4vw, 1.2rem);
+        max-width: 720px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 800;
+        transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+      }
+
+      .button-primary {
+        color: #fff;
+        background: var(--brand);
+        box-shadow: 0 14px 30px rgba(35, 76, 69, 0.22);
+      }
+
+      .button-secondary {
+        color: var(--brand);
+        background: var(--surface-strong);
+        border: 1px solid var(--line);
+      }
+
+      .hero-panel {
+        background: rgba(255, 253, 248, 0.78);
+        border: 1px solid rgba(228, 222, 210, 0.92);
+        border-radius: 32px;
+        box-shadow: var(--shadow);
+        padding: 24px;
+        backdrop-filter: blur(18px);
+      }
+
+      .mini-stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .mini-app {
+        display: grid;
+        grid-template-columns: 46px 1fr;
+        gap: 12px;
+        align-items: center;
+        padding: 12px;
+        border-radius: 20px;
+        background: var(--surface-strong);
+        border: 1px solid rgba(228, 222, 210, 0.76);
+      }
+
+      .mini-icon,
+      .app-icon {
+        display: inline-grid;
+        place-items: center;
+        color: #fff;
+        background: linear-gradient(135deg, var(--brand-2), var(--accent));
+        font-weight: 900;
+        letter-spacing: -0.04em;
+      }
+
+      .mini-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        font-size: 0.86rem;
+      }
+
+      .mini-title {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 900;
+        line-height: 1.3;
+      }
+
+      .mini-text {
+        margin: 2px 0 0;
+        color: var(--subtle);
+        font-size: 0.82rem;
+        line-height: 1.45;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 18px;
+        margin: 28px 0 18px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: clamp(1.6rem, 4vw, 2.4rem);
+        line-height: 1.15;
+        letter-spacing: -0.055em;
+        color: var(--brand);
+      }
+
+      .section-note {
+        margin: 8px 0 0;
+        color: var(--muted);
+      }
+
+      .app-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        padding-bottom: 64px;
+      }
+
+      .app-card {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: rgba(255, 253, 248, 0.9);
+        box-shadow: 0 12px 34px rgba(31, 41, 51, 0.06);
+      }
+
+      .app-card-head {
+        display: grid;
+        grid-template-columns: 58px 1fr;
+        gap: 14px;
+        align-items: center;
+      }
+
+      .app-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+        box-shadow: 0 10px 18px rgba(31, 41, 51, 0.12);
+      }
+
+      .category {
+        display: inline-flex;
+        width: fit-content;
+        margin: 0 0 5px;
+        padding: 3px 9px;
+        border-radius: 999px;
+        color: var(--brand);
+        background: var(--brand-soft);
+        font-size: 0.74rem;
+        font-weight: 900;
+      }
+
+      .app-title {
+        margin: 0;
+        font-size: 1.15rem;
+        line-height: 1.3;
+        letter-spacing: -0.03em;
+      }
+
+      .app-description {
+        margin: 16px 0 18px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: auto;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 36px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--surface-strong);
+        color: var(--brand);
+        font-size: 0.84rem;
+        font-weight: 850;
+        text-decoration: none;
+      }
+
+      .pill:hover {
+        border-color: rgba(61, 124, 120, 0.38);
+        background: var(--brand-soft);
+      }
+
+      .pill-primary {
+        border-color: transparent;
+        color: #fff;
+        background: var(--brand);
+      }
+
+      .pill-primary:hover {
+        background: var(--brand-2);
+      }
+
+      .pill-disabled {
+        color: var(--subtle);
+        background: #f2eee5;
+        cursor: not-allowed;
+      }
+
+      .site-footer {
+        border-top: 1px solid var(--line);
+        padding: 28px 0 48px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .site-footer p {
+        margin: 0;
+      }
+
+      @media (max-width: 820px) {
+        .hero {
+          padding-top: 34px;
+        }
+
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-panel {
+          order: -1;
+        }
+
+        .app-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .page {
+          width: min(100% - 24px, 1120px);
+        }
+
+        .site-header {
+          align-items: flex-start;
+        }
+
+        .section-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .app-card {
+          border-radius: 24px;
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header" aria-label="サイトヘッダー">
+        <a class="brand-mark" href="#top" aria-label="Lillip Apps トップへ">
+          <span class="brand-icon">Li</span>
+          <span>Lillip Apps</span>
+        </a>
+        <nav aria-label="ページ内ナビゲーション">
+          <a class="nav-link" href="#apps">アプリ一覧</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-grid">
+            <div>
+              <p class="eyebrow">個人開発の単機能iPhoneアプリ</p>
+              <h1 id="hero-title">Lillip Apps</h1>
+              <p class="hero-copy">
+                小さく、すぐ使えるiPhoneアプリ集。App Storeで公開中・公開予定のアプリを、用途別に探しやすくまとめています。
+              </p>
+              <div class="hero-actions">
+                <a class="button button-primary" href="#apps">アプリを見る</a>
+                <a class="button button-secondary" href="https://show1005.github.io/app-legal-pages/">Legal / Support</a>
+              </div>
+            </div>
+
+            <aside class="hero-panel" aria-label="代表アプリ">
+              <div class="mini-stack">
+                <div class="mini-app">
+                  <span class="mini-icon">買</span>
+                  <div>
+                    <p class="mini-title">買い物プロフィール</p>
+                    <p class="mini-text">家族のサイズや好みを買い物前に確認</p>
+                  </div>
+                </div>
+                <div class="mini-app">
+                  <span class="mini-icon">NFC</span>
+                  <div>
+                    <p class="mini-title">NFCタグセットアップ</p>
+                    <p class="mini-text">NFCタグを作って、暮らしの操作を短くする</p>
+                  </div>
+                </div>
+                <div class="mini-app">
+                  <span class="mini-icon">音</span>
+                  <div>
+                    <p class="mini-title">音階チェッカー</p>
+                    <p class="mini-text">マイクで拾った音名をリアルタイムに確認</p>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="apps" aria-labelledby="apps-title">
+          <div class="section-head">
+            <div>
+              <h2 id="apps-title">アプリ一覧</h2>
+              <p class="section-note">App Storeリンクが未確定のものは、仮置きとして無効リンクにしています。</p>
+            </div>
+          </div>
+
+          <div class="app-grid">
+            <article class="app-card">
+              <div class="app-card-head">
+                <span class="app-icon">買</span>
+                <div>
+                  <p class="category">買い物 / 家族管理</p>
+                  <h3 class="app-title">買い物プロフィール</h3>
+                </div>
+              </div>
+              <p class="app-description">家族や自分の服・靴・好みのサイズをまとめて管理するアプリ。</p>
+              <div class="links">
+                <a class="pill pill-primary" href="https://apps.apple.com/jp/app/%E8%B2%B7%E3%81%84%E7%89%A9%E3%83%97%E3%83%AD%E3%83%95%E3%82%A3%E3%83%BC%E3%83%AB/id6786977208">App Store</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/shopping-profile/privacy-policy.html">Privacy</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/shopping-profile/support.html">Support</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/shopping-profile/share.html">Tool</a>
+              </div>
+            </article>
+
+            <article class="app-card">
+              <div class="app-card-head">
+                <span class="app-icon">NFC</span>
+                <div>
+                  <p class="category">NFC / ショートカット</p>
+                  <h3 class="app-title">NFCタグセットアップ</h3>
+                </div>
+              </div>
+              <p class="app-description">NFCタグにURL、Wi-Fi情報、テキスト、ショートカット起動URLを書き込むアプリ。</p>
+              <div class="links">
+                <a class="pill pill-primary" href="https://apps.apple.com/jp/app/nfc%E3%82%BF%E3%82%B0%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97/id6781783708">App Store</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/nfc-setup/privacy-policy.html">Privacy</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/nfc-setup/support.html">Support</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/nfc-setup/shortcuts.html">Shortcuts</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/nfc-setup/nfc-tags.html">NFC Tags</a>
+              </div>
+            </article>
+
+            <article class="app-card">
+              <div class="app-card-head">
+                <span class="app-icon">音</span>
+                <div>
+                  <p class="category">音声 / 音楽</p>
+                  <h3 class="app-title">音階チェッカー</h3>
+                </div>
+              </div>
+              <p class="app-description">マイクで拾った音を解析し、音名をリアルタイムに確認するアプリ。</p>
+              <div class="links">
+                <a class="pill pill-primary" href="https://apps.apple.com/jp/app/id6779863790">App Store</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/pitch-note-checker/privacy-policy.html">Privacy</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/pitch-note-checker/support.html">Support</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/pitch-note-checker/hz-piano.html">Hz Piano</a>
+              </div>
+            </article>
+
+            <article class="app-card">
+              <div class="app-card-head">
+                <span class="app-icon">サ</span>
+                <div>
+                  <p class="category">お金 / 期限管理</p>
+                  <h3 class="app-title">サブスク管理｜更新日・解約通知</h3>
+                </div>
+              </div>
+              <p class="app-description">サブスクの更新日や解約予定日を登録し、解約忘れを防ぐアプリ。</p>
+              <div class="links">
+                <a class="pill pill-primary" href="https://apps.apple.com/jp/app/id6773755281">App Store</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/subscription-cancel-calendar-ios/privacy/">Privacy</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/subscription-cancel-calendar-ios/support/">Support</a>
+              </div>
+            </article>
+
+            <article class="app-card">
+              <div class="app-card-head">
+                <span class="app-icon">問</span>
+                <div>
+                  <p class="category">学習 / 資格</p>
+                  <h3 class="app-title">過去問周回カウンター</h3>
+                </div>
+              </div>
+              <p class="app-description">問題集や過去問を何周したか、点数や正答率と一緒に記録するアプリ。</p>
+              <div class="links">
+                <a class="pill pill-primary" href="https://apps.apple.com/jp/app/id6771070513">App Store</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/past-question-round-counter/privacy-policy.html">Privacy</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/past-question-round-counter/support.html">Support</a>
+              </div>
+            </article>
+
+            <article class="app-card">
+              <div class="app-card-head">
+                <span class="app-icon">期</span>
+                <div>
+                  <p class="category">食品 / 期限管理</p>
+                  <h3 class="app-title">賞味期限チェック</h3>
+                </div>
+              </div>
+              <p class="app-description">食品や日用品の期限を登録し、期限切れを防ぐアプリ。</p>
+              <div class="links">
+                <a class="pill pill-primary" href="https://apps.apple.com/jp/app/id6767770860">App Store</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/shomikigen-check/privacy-policy.html">Privacy</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/shomikigen-check/support.html">Support</a>
+              </div>
+            </article>
+
+            <article class="app-card">
+              <div class="app-card-head">
+                <span class="app-icon">自</span>
+                <div>
+                  <p class="category">自己分析 / キャリア</p>
+                  <h3 class="app-title">自己分析ノート</h3>
+                </div>
+              </div>
+              <p class="app-description">経歴・経験・自分の特徴を整理し、自己分析に使えるアプリ。</p>
+              <div class="links">
+                <a class="pill pill-primary" href="https://apps.apple.com/jp/app/%E8%87%AA%E5%B7%B1%E5%88%86%E6%9E%90%E3%83%8E%E3%83%BC%E3%83%88-%E7%B5%8C%E6%AD%B4-%E5%BC%B7%E3%81%BF%E6%95%B4%E7%90%86/id6784313528">App Store</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/self-analysis-note/privacy-policy.html">Privacy</a>
+                <a class="pill" href="https://show1005.github.io/app-legal-pages/self-analysis-note/support.html">Support</a>
+              </div>
+            </article>
+
+            <article class="app-card">
+              <div class="app-card-head">
+                <span class="app-icon">方</span>
+                <div>
+                  <p class="category">方角 / コンパス</p>
+                  <h3 class="app-title">Direction Compass</h3>
+                </div>
+              </div>
+              <p class="app-description">目的地や方角を入力して、向かう方向を矢印で確認するアプリ。</p>
+              <div class="links">
+                <a class="pill pill-disabled" href="#" aria-disabled="true">App Store</a>
+                <a class="pill pill-disabled" href="#" aria-disabled="true">Privacy</a>
+                <a class="pill pill-disabled" href="#" aria-disabled="true">Support</a>
+              </div>
+            </article>
+
+            <article class="app-card">
+              <div class="app-card-head">
+                <span class="app-icon">写</span>
+                <div>
+                  <p class="category">写真 / カメラ</p>
+                  <h3 class="app-title">Overlay Camera</h3>
+                </div>
+              </div>
+              <p class="app-description">参考写真を半透明に重ねて、同じ構図で写真を撮影するアプリ。</p>
+              <div class="links">
+                <a class="pill pill-disabled" href="#" aria-disabled="true">App Store</a>
+                <a class="pill pill-disabled" href="#" aria-disabled="true">Privacy</a>
+                <a class="pill pill-disabled" href="#" aria-disabled="true">Support</a>
+              </div>
+            </article>
+
+            <article class="app-card">
+              <div class="app-card-head">
+                <span class="app-icon">声</span>
+                <div>
+                  <p class="category">音声 / メモ</p>
+                  <h3 class="app-title">Voice Stream Memo</h3>
+                </div>
+              </div>
+              <p class="app-description">話し続けた内容をリアルタイムにテキスト化して残す音声メモアプリ。</p>
+              <div class="links">
+                <a class="pill pill-disabled" href="#" aria-disabled="true">App Store</a>
+                <a class="pill pill-disabled" href="#" aria-disabled="true">Privacy</a>
+                <a class="pill pill-disabled" href="#" aria-disabled="true">Support</a>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <p><strong>Developer:</strong> Show1005</p>
+        <p>Legal / Support pages are hosted under <a href="https://show1005.github.io/app-legal-pages/">app-legal-pages</a>. This site is designed for GitHub Pages.</p>
+      </footer>
+    </div>
+  </body>
+</html>
