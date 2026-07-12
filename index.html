@@ -249,38 +249,20 @@
         position: relative;
         z-index: 2;
         display: grid;
-        grid-template-rows: auto 1fr auto;
+        grid-template-rows: 1fr auto;
         height: 100dvh;
         width: min(1240px, calc(100% - 48px));
         margin: 0 auto;
       }
 
-      .site-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 20px 0 8px;
-      }
-
-      .brand-mark {
-        display: inline-flex;
-        align-items: center;
-        gap: 11px;
-        text-decoration: none;
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: 1rem;
-        color: var(--text);
-      }
-
-      .brand-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: 17px;
+      .title-icon {
+        width: clamp(56px, 5.5vw, 76px);
+        height: clamp(56px, 5.5vw, 76px);
+        flex: 0 0 auto;
+        border-radius: clamp(17px, 1.7vw, 23px);
         display: block;
         object-fit: cover;
-        box-shadow: 0 0 30px rgba(56, 224, 200, 0.3);
+        box-shadow: 0 0 36px rgba(56, 224, 200, 0.3);
       }
 
       .nav-link {
@@ -345,6 +327,9 @@
 
       h1 {
         margin: 0;
+        display: flex;
+        align-items: center;
+        gap: clamp(14px, 2vw, 24px);
         font-family: var(--font-display);
         font-size: clamp(2.8rem, 6vw, 5.4rem);
         font-weight: 700;
@@ -700,7 +685,7 @@
       }
 
       @media (max-width: 420px) {
-        .brand-icon { width: 48px; height: 48px; border-radius: 15px; }
+        .title-icon { width: 52px; height: 52px; border-radius: 16px; }
         .launcher { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 16px 10px; }
         .sheet { padding: 24px 20px; }
         .sheet-head { grid-template-columns: 68px 1fr; gap: 14px; }
@@ -724,16 +709,13 @@
     <div class="grain" aria-hidden="true"></div>
 
     <div class="shell">
-      <header class="site-header" aria-label="サイトヘッダー">
-        <a class="brand-mark" href="./" aria-label="Lillip Apps トップ">
-          <img class="brand-icon" src="favicon.png" alt="" width="56" height="56">
-        </a>
-      </header>
-
       <main class="stage">
         <section class="intro" aria-labelledby="hero-title">
           <p class="eyebrow">INDIE iOS APPS</p>
-          <h1 id="hero-title"><span class="h1-grad">Lillip Apps</span></h1>
+          <h1 id="hero-title">
+            <img class="title-icon" src="favicon.png" alt="" width="76" height="76">
+            <span class="h1-grad">Lillip Apps</span>
+          </h1>
           <p class="hero-copy">
             <strong>ひとつのことを、すぐできる。</strong><br>
             買い物、NFC、サブスク、学習、期限管理など、<br>
