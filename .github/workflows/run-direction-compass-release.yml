@@ -1,20 +1,22 @@
 name: Run Direction Compass release update
 
 on:
-  push:
+  pull_request:
     branches: [main]
-    paths: [.github/workflows/run-direction-compass-release.yml]
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
 
 jobs:
   update:
+    if: github.head_ref == 'release/direction-compass-app-store'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: release/direction-compass-app-store
+          token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -39,12 +41,15 @@ jobs:
             { label: "Support", href: LEGAL + "/direction-compass/support.html" },
           ],
         },'''
-          if old not in s: raise SystemExit('target block not found')
-          p.write_text(s.replace(old, new, 1))
+          if old in s:
+              p.write_text(s.replace(old, new, 1))
+          elif 'https://apps.apple.com/jp/app/direction-compass/id6793981416' not in s:
+              raise SystemExit('target block not found')
           PY
           rm -f .github/workflows/release-direction-compass.yml
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
+          git diff --cached --quiet && exit 0
           git commit -m 'Mark Direction Compass as released'
           git push origin HEAD:release/direction-compass-app-store
