@@ -1,0 +1,55 @@
+name: Release Direction Compass
+
+on:
+  push:
+    branches:
+      - release/direction-compass-app-store
+    paths:
+      - .github/workflows/release-direction-compass.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/direction-compass-app-store
+      - name: Mark Direction Compass as released
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("index.html")
+          text = path.read_text()
+          old = '''        {
+          id: "direction-compass",
+          name: "Direction Compass",
+          category: "方角 / コンパス",
+          desc: "目的地や方角を入力して、向かう方向を矢印で確認するアプリ。",
+          soon: true,
+          links: [],
+        },'''
+          new = '''        {
+          id: "direction-compass",
+          name: "Direction Compass",
+          category: "方角 / コンパス",
+          desc: "目的地や方角を入力して、向かう方向を矢印で確認するアプリ。",
+          links: [
+            { label: "App Store", href: "https://apps.apple.com/jp/app/direction-compass/id6793981416", primary: true },
+            { label: "Privacy", href: LEGAL + "/direction-compass/privacy-policy.html" },
+            { label: "Support", href: LEGAL + "/direction-compass/support.html" },
+          ],
+        },'''
+          if old not in text:
+              raise SystemExit("Direction Compass coming-soon block not found")
+          path.write_text(text.replace(old, new, 1))
+          PY
+          rm .github/workflows/release-direction-compass.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/release-direction-compass.yml
+          git commit -m "Mark Direction Compass as released"
+          git push origin HEAD:release/direction-compass-app-store
