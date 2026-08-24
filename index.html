@@ -156,6 +156,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+      @property --angle {
+        syntax: "<angle>";
+        inherits: false;
+        initial-value: 0deg;
+      }
+
       :root {
         color-scheme: dark;
         --ink: #060a16;
@@ -168,10 +174,13 @@
         --blue: #4f8cff;
         --teal: #38e0c8;
         --pop: #ff7a59;
+        --violet: #a78bfa;
         --grad: linear-gradient(96deg, var(--blue), var(--teal));
         --font-display: "Space Grotesk", "Zen Kaku Gothic New", sans-serif;
         --font-body: "Zen Kaku Gothic New", -apple-system, "Hiragino Sans", sans-serif;
         --font-mono: "IBM Plex Mono", monospace;
+        --mx: 50%;
+        --my: 22%;
       }
 
       * { box-sizing: border-box; }
@@ -235,10 +244,45 @@
         to   { transform: translate3d(7rem, -5rem, 0) scale(0.95); }
       }
 
-      .grain {
+      .grid-field {
         position: fixed;
         inset: 0;
         z-index: 1;
+        pointer-events: none;
+        opacity: 0.16;
+        background-image: radial-gradient(rgba(148, 173, 224, 0.6) 1px, transparent 1px);
+        background-size: 34px 34px;
+        -webkit-mask-image: radial-gradient(380px 380px at var(--mx) var(--my), #000, transparent 72%);
+        mask-image: radial-gradient(380px 380px at var(--mx) var(--my), #000, transparent 72%);
+      }
+
+      .constellation {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0.8;
+      }
+
+      .spotlight {
+        position: fixed;
+        inset: 0;
+        z-index: 4;
+        pointer-events: none;
+        opacity: 0;
+        mix-blend-mode: screen;
+        background: radial-gradient(560px 560px at var(--mx) var(--my), rgba(79, 140, 255, 0.16), rgba(56, 224, 200, 0.05) 45%, transparent 70%);
+        transition: opacity 0.6s ease;
+      }
+
+      @media (pointer: fine) {
+        .spotlight { opacity: 1; }
+      }
+
+      .grain {
+        position: fixed;
+        inset: 0;
+        z-index: 3;
         pointer-events: none;
         opacity: 0.5;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -247,9 +291,9 @@
       /* ---- one-screen shell ---- */
       .shell {
         position: relative;
-        z-index: 2;
+        z-index: 5;
         display: grid;
-        grid-template-rows: 1fr auto;
+        grid-template-rows: auto 1fr auto;
         height: 100dvh;
         width: min(1240px, calc(100% - 48px));
         margin: 0 auto;
@@ -265,20 +309,37 @@
         box-shadow: 0 0 36px rgba(56, 224, 200, 0.3);
       }
 
-      .nav-link {
-        color: var(--muted);
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        text-decoration: none;
-        padding: 7px 12px;
-        border: 1px solid transparent;
-        border-radius: 10px;
-        transition: color 0.2s ease, border-color 0.2s ease;
+      /* ---- category ticker ---- */
+      .ticker {
+        overflow: hidden;
+        margin-top: clamp(10px, 2vh, 18px);
+        padding-bottom: clamp(8px, 1.6vh, 14px);
+        border-bottom: 1px solid var(--line);
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
       }
 
-      .nav-link:hover {
-        color: var(--text);
-        border-color: var(--line);
+      .ticker-track {
+        display: flex;
+        width: max-content;
+        gap: 30px;
+        white-space: nowrap;
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.09em;
+        color: var(--subtle);
+        animation: ticker-scroll 32s linear infinite;
+      }
+
+      .ticker-track i {
+        margin-right: 6px;
+        font-style: normal;
+        color: var(--teal);
+      }
+
+      @keyframes ticker-scroll {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-50%); }
       }
 
       /* ---- main split ---- */
@@ -338,12 +399,31 @@
       }
 
       .h1-grad {
+        position: relative;
+        min-width: 0;
+        overflow-wrap: anywhere;
         background: linear-gradient(100deg, #dfe9ff 10%, var(--blue) 45%, var(--teal) 80%);
         background-size: 200% 100%;
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
         animation: sheen 7s ease-in-out infinite alternate;
+      }
+
+      .h1-grad::after {
+        content: "";
+        display: inline-block;
+        width: 0.09em;
+        height: 0.8em;
+        margin-left: 0.06em;
+        background: var(--teal);
+        vertical-align: -0.05em;
+        animation: caret 1s step-end infinite;
+      }
+
+      @keyframes caret {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
       }
 
       @keyframes sheen {
@@ -360,11 +440,45 @@
 
       .hero-copy strong { color: var(--text); font-weight: 700; }
 
+      .stat-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 22px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .stat-row li {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        padding: 8px 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--glass);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+      }
+
+      .stat-row strong {
+        font-family: var(--font-display);
+        font-size: 0.95rem;
+        color: var(--text);
+      }
+
+      .stat-row span {
+        font-family: var(--font-mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.04em;
+        color: var(--subtle);
+      }
+
       .hint {
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        margin-top: 28px;
+        margin-top: 18px;
         color: var(--subtle);
         font-family: var(--font-mono);
         font-size: 0.74rem;
@@ -380,6 +494,8 @@
 
       /* ---- launcher ---- */
       .launcher {
+        position: relative;
+        z-index: 0;
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: clamp(10px, 1.8vw, 22px) clamp(8px, 1.4vw, 18px);
@@ -393,6 +509,25 @@
         transform-style: preserve-3d;
         will-change: transform;
         animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.12s both;
+      }
+
+      .launcher::before {
+        content: "";
+        position: absolute;
+        inset: -1.5px;
+        z-index: -1;
+        border-radius: inherit;
+        padding: 1.5px;
+        background: conic-gradient(from var(--angle), var(--blue), var(--violet), var(--teal), var(--pop), var(--blue));
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0.7;
+        animation: spin-angle 7s linear infinite;
+      }
+
+      @keyframes spin-angle {
+        to { --angle: 360deg; }
       }
 
       .app-btn {
@@ -434,16 +569,18 @@
         box-shadow:
           0 16px 34px rgba(0, 0, 0, 0.5),
           0 0 0 1px rgba(148, 173, 224, 0.16);
+        transform: translate(var(--mx-i, 0px), var(--my-i, 0px)) translateY(var(--lift, 0px)) scale(var(--scale, 1));
         transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1.5), filter 0.3s ease;
       }
 
       .app-btn:hover img,
       .app-btn:focus-visible img {
-        transform: translateY(-5px) scale(1.12);
+        --lift: -5px;
+        --scale: 1.12;
       }
 
       .app-btn:active img {
-        transform: scale(0.96);
+        --scale: 0.96;
         transition-duration: 0.1s;
       }
 
@@ -696,19 +833,30 @@
         .aurora::before,
         .aurora::after,
         .h1-grad,
+        .h1-grad::after,
         .eyebrow::before,
         .intro,
         .launcher,
+        .launcher::before,
+        .ticker-track,
         .sheet { animation: none; }
         .app-btn img, .pill, .sheet-close, .app-btn { transition: none; }
+        .constellation, .grid-field, .spotlight { display: none; }
       }
     </style>
   </head>
   <body>
     <div class="aurora" aria-hidden="true"></div>
+    <div class="grid-field" aria-hidden="true"></div>
+    <canvas class="constellation" id="constellation" aria-hidden="true"></canvas>
     <div class="grain" aria-hidden="true"></div>
+    <div class="spotlight" aria-hidden="true"></div>
 
     <div class="shell">
+      <div class="ticker" aria-hidden="true">
+        <div class="ticker-track" id="tickerTrack"></div>
+      </div>
+
       <main class="stage">
         <section class="intro" aria-labelledby="hero-title">
           <p class="eyebrow">INDIE iOS APPS</p>
@@ -721,6 +869,11 @@
             買い物、NFC、サブスク、学習、期限管理など、<br>
             毎日の小さな課題を解決するiPhoneアプリを作っています。
           </p>
+          <ul class="stat-row" id="statRow">
+            <li><strong id="statCount">0</strong><span>Apps Shipped</span></li>
+            <li><strong>iOS</strong><span>Native / Swift</span></li>
+            <li><strong>Solo</strong><span>Indie Dev</span></li>
+          </ul>
           <p class="hint">アイコンをタップして詳細を見る</p>
         </section>
 
@@ -896,6 +1049,77 @@
         launcher.appendChild(btn);
       });
 
+      // ---- category ticker ----
+      const tickerTrack = document.getElementById("tickerTrack");
+      if (tickerTrack) {
+        const cats = APPS.map((app) => app.category);
+        tickerTrack.innerHTML = cats.concat(cats)
+          .map((c) => `<span class="tick-item"><i>&#9670;</i>${c}</span>`)
+          .join("");
+      }
+
+      // ---- bento stat chips: count-up ----
+      const statCount = document.getElementById("statCount");
+      if (statCount) {
+        const target = APPS.length;
+        if (reduceMotion) {
+          statCount.textContent = target;
+        } else {
+          const duration = 900;
+          const start = performance.now();
+          const tick = (now) => {
+            const p = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            statCount.textContent = Math.round(eased * target);
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      }
+
+      // ---- magnetic pull on app icons ----
+      if (!reduceMotion && matchMedia("(pointer: fine)").matches) {
+        launcher.querySelectorAll(".app-btn").forEach((btn) => {
+          const img = btn.querySelector("img");
+          btn.addEventListener("pointermove", (e) => {
+            const r = btn.getBoundingClientRect();
+            const nx = (e.clientX - r.left) / r.width - 0.5;
+            const ny = (e.clientY - r.top) / r.height - 0.5;
+            img.style.setProperty("--mx-i", `${(nx * 9).toFixed(1)}px`);
+            img.style.setProperty("--my-i", `${(ny * 9).toFixed(1)}px`);
+          }, { passive: true });
+          btn.addEventListener("pointerleave", () => {
+            img.style.removeProperty("--mx-i");
+            img.style.removeProperty("--my-i");
+          });
+        });
+      }
+
+      // ---- kinetic headline: scramble-in reveal ----
+      if (!reduceMotion) {
+        const brand = document.querySelector(".h1-grad");
+        if (brand) {
+          const finalText = brand.textContent;
+          const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&*+=-/";
+          const totalFrames = finalText.length * 3;
+          let frame = 0;
+          const decode = () => {
+            frame++;
+            const revealCount = Math.floor((frame / totalFrames) * finalText.length);
+            let out = "";
+            for (let i = 0; i < finalText.length; i++) {
+              if (finalText[i] === " ") out += " ";
+              else if (i < revealCount) out += finalText[i];
+              else out += glyphs[(Math.random() * glyphs.length) | 0];
+            }
+            brand.textContent = out;
+            if (frame < totalFrames) requestAnimationFrame(decode);
+            else brand.textContent = finalText;
+          };
+          requestAnimationFrame(decode);
+        }
+      }
+
       function fillSheet(app) {
         sheetIcon.src = `assets/icons/${app.id}.png`;
         sheetCategory.textContent = app.category;
@@ -988,21 +1212,104 @@
         }
       });
 
-      // 3D tilt on the launcher panel
-      if (!reduceMotion && matchMedia("(pointer: fine)").matches) {
+      // 3D tilt on the launcher panel + cursor-reactive spotlight/grid glow
+      if (matchMedia("(pointer: fine)").matches) {
         const maxTilt = 5;
+        const doTilt = !reduceMotion;
         let raf = null;
         window.addEventListener("pointermove", (e) => {
-          if (raf || !overlay.hidden) return;
+          if (raf) return;
           raf = requestAnimationFrame(() => {
             const nx = e.clientX / window.innerWidth - 0.5;
             const ny = e.clientY / window.innerHeight - 0.5;
-            launcher.style.transform =
-              `perspective(1200px) rotateY(${(nx * maxTilt).toFixed(2)}deg) rotateX(${(-ny * maxTilt).toFixed(2)}deg)`;
+            document.documentElement.style.setProperty("--mx", `${e.clientX}px`);
+            document.documentElement.style.setProperty("--my", `${e.clientY}px`);
+            if (doTilt && overlay.hidden) {
+              launcher.style.transform =
+                `perspective(1200px) rotateY(${(nx * maxTilt).toFixed(2)}deg) rotateX(${(-ny * maxTilt).toFixed(2)}deg)`;
+            }
             raf = null;
           });
         }, { passive: true });
       }
+
+      // ---- constellation particle background ----
+      (function () {
+        const canvas = document.getElementById("constellation");
+        if (!canvas || reduceMotion) return;
+        const ctx = canvas.getContext("2d");
+        const COLORS = ["79,140,255", "56,224,200", "167,139,250", "255,122,89"];
+        let w = 0, h = 0, dpr = 1, particles = [], raf = null, resizeTimer = null;
+
+        function spawn() {
+          return {
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 0.28 * dpr,
+            vy: (Math.random() - 0.5) * 0.28 * dpr,
+            r: (Math.random() * 1.3 + 0.6) * dpr,
+            c: COLORS[(Math.random() * COLORS.length) | 0],
+          };
+        }
+
+        function resize() {
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          w = canvas.width = Math.round(innerWidth * dpr);
+          h = canvas.height = Math.round(innerHeight * dpr);
+          canvas.style.width = innerWidth + "px";
+          canvas.style.height = innerHeight + "px";
+          const count = Math.min(Math.round((innerWidth * innerHeight) / 24000), 70);
+          particles = Array.from({ length: count }, spawn);
+        }
+
+        function step() {
+          ctx.clearRect(0, 0, w, h);
+          const linkDist = 130 * dpr;
+          for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0 || p.x > w) p.vx *= -1;
+            if (p.y < 0 || p.y > h) p.vy *= -1;
+            for (let j = i + 1; j < particles.length; j++) {
+              const q = particles[j];
+              const dx = p.x - q.x, dy = p.y - q.y;
+              const dist = Math.hypot(dx, dy);
+              if (dist < linkDist) {
+                ctx.strokeStyle = `rgba(${p.c},${(0.14 * (1 - dist / linkDist)).toFixed(3)})`;
+                ctx.lineWidth = dpr * 0.6;
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(q.x, q.y);
+                ctx.stroke();
+              }
+            }
+          }
+          for (const p of particles) {
+            ctx.fillStyle = `rgba(${p.c},0.55)`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          raf = requestAnimationFrame(step);
+        }
+
+        window.addEventListener("resize", () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(resize, 150);
+        }, { passive: true });
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            cancelAnimationFrame(raf);
+          } else if (!raf) {
+            step();
+          }
+        });
+
+        resize();
+        step();
+      })();
     </script>
   </body>
 </html>
