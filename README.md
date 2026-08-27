@@ -83,5 +83,5 @@ Do not invent or guess URLs. Replace placeholders only after the target page exi
 
 - Replace placeholder links for unreleased apps
 - Add real app icons under `assets/icons/`
-- Add screenshots if needed under `assets/screenshots/`
+- Add screenshots for apps that don't have any yet under `assets/screenshots/` (音階チェッカー, 過去問周回カウンター, 賞味期限チェック currently have no screenshots in their source repos)
 - Update `app-legal-pages` top page to link back to Lillip Apps
