@@ -645,13 +645,18 @@
 
       .sheet {
         position: relative;
-        width: min(520px, 100%);
+        width: min(560px, 100%);
+        max-height: min(86vh, 780px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
         padding: 30px;
         border: 1px solid rgba(148, 173, 224, 0.22);
         border-radius: 28px;
         background: linear-gradient(160deg, rgba(23, 32, 60, 0.92), rgba(9, 14, 30, 0.95));
         box-shadow: 0 60px 120px rgba(0, 0, 0, 0.6);
         animation: sheet-in 0.38s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(148, 173, 224, 0.35) transparent;
       }
 
       @keyframes sheet-in {
@@ -707,15 +712,69 @@
       .sheet.is-soon .sheet-soon { display: inline-block; }
 
       .sheet-desc {
-        margin: 20px 0 24px;
+        margin: 20px 0 0;
         color: var(--muted);
         font-size: 0.94rem;
+      }
+
+      .sheet-long {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 0.86rem;
+        line-height: 1.75;
+      }
+
+      .sheet-features {
+        display: none;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin: 16px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .sheet-features:not(:empty) {
+        display: flex;
+      }
+
+      .sheet-features li {
+        padding: 6px 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--glass);
+        color: var(--text);
+        font-size: 0.72rem;
+        letter-spacing: 0.01em;
+      }
+
+      .sheet-gallery {
+        display: none;
+        gap: 10px;
+        margin: 18px -30px 0;
+        padding: 0 30px 2px;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .sheet-gallery:not(:empty) {
+        display: flex;
+      }
+
+      .sheet-gallery img {
+        flex: 0 0 auto;
+        width: 128px;
+        height: auto;
+        border-radius: 16px;
+        scroll-snap-align: start;
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(148, 173, 224, 0.18);
       }
 
       .sheet-links {
         display: flex;
         flex-wrap: wrap;
         gap: 9px;
+        margin-top: 24px;
       }
 
       .pill {
@@ -827,6 +886,8 @@
         .sheet { padding: 24px 20px; }
         .sheet-head { grid-template-columns: 68px 1fr; gap: 14px; }
         .sheet-icon { width: 68px; height: 68px; }
+        .sheet-gallery { margin: 18px -20px 0; padding: 0 20px 2px; }
+        .sheet-gallery img { width: 108px; }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -898,6 +959,9 @@
           </div>
         </div>
         <p class="sheet-desc" id="sheet-desc"></p>
+        <p class="sheet-long" id="sheet-long"></p>
+        <ul class="sheet-features" id="sheet-features"></ul>
+        <div class="sheet-gallery" id="sheet-gallery"></div>
         <div class="sheet-links" id="sheet-links"></div>
       </div>
     </div>
@@ -911,6 +975,9 @@
           name: "買い物プロフィール",
           category: "買い物 / 家族管理",
           desc: "家族や自分の服・靴・好みのサイズをまとめて管理するアプリ。",
+          long: "服や靴を買うとき、子ども服を選ぶとき、プレゼントを探すときに「サイズはいくつだったか」「よく買うブランドは」「苦手な色や避けたい素材は」をその場ですぐ確認できます。データは端末内保存のみで、外部送信はありません。",
+          features: ["人ごとにサイズ・ブランド・好みを登録", "服・靴・指輪・帽子など自由入力に対応", "買い物中に一覧で確認してコピー", "Face ID / Touch IDでアプリロック可能"],
+          shots: 3,
           links: [
             { label: "App Store", href: "https://apps.apple.com/jp/app/%E8%B2%B7%E3%81%84%E7%89%A9%E3%83%97%E3%83%AD%E3%83%95%E3%82%A3%E3%83%BC%E3%83%AB/id6786977208", primary: true },
             { label: "Privacy", href: LEGAL + "/shopping-profile/privacy-policy.html" },
@@ -923,6 +990,9 @@
           name: "NFCタグセットアップ",
           category: "NFC / ショートカット",
           desc: "NFCタグにURL、Wi-Fi情報、テキスト、ショートカット起動URLを書き込むアプリ。",
+          long: "「NFCタグを買ったけど、何を書き込めばいいか分からない」を解消。URL・Wi-Fi・連絡先(vCard)・テキストのタグを迷わず作成でき、作った内容は端末内に保存して再利用できます。",
+          features: ["NFCタグの読み取り / 書き込み", "URL・Wi-Fi・vCard・テキストに対応", "作成したタグ内容を保存して再利用", "ログイン・広告・外部サーバーなし"],
+          shots: 3,
           links: [
             { label: "App Store", href: "https://apps.apple.com/jp/app/nfc%E3%82%BF%E3%82%B0%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97/id6781783708", primary: true },
             { label: "Privacy", href: LEGAL + "/nfc-setup/privacy-policy.html" },
@@ -936,6 +1006,9 @@
           name: "音階チェッカー",
           category: "音声 / 音楽",
           desc: "マイクで拾った音を解析し、音名をリアルタイムに確認するアプリ。",
+          long: "マイクの音をリアルタイムに解析し、音名・周波数(Hz)・目標音とのセント差・low / in tune / highの簡易ガイドを表示します。録音や保存はせず、その場で音程を確認することに特化しています。",
+          features: ["音名をリアルタイム表示", "周波数(Hz)とセント差を同時表示", "low / in tune / highの簡易ガイド", "基準周波数 A4 をローカルで調整可能"],
+          shots: 0,
           links: [
             { label: "App Store", href: "https://apps.apple.com/jp/app/id6779863790", primary: true },
             { label: "Privacy", href: LEGAL + "/pitch-note-checker/privacy-policy.html" },
@@ -948,6 +1021,9 @@
           name: "サブスク管理",
           category: "お金 / 期限管理",
           desc: "サブスクの更新日や解約予定日を登録し、解約忘れを防ぐアプリ。",
+          long: "サブスク名・更新日・解約判断日を登録すると一覧で確認でき、加入中サブスクの合計金額も通貨別にひと目で分かります。登録した日付にはローカル通知でお知らせします。",
+          features: ["更新日・解約判断日を一覧管理", "加入中サブスクの合計金額を通貨別に表示", "登録した日付にローカル通知", "同期・課金・広告なしのシンプル設計"],
+          shots: 3,
           links: [
             { label: "App Store", href: "https://apps.apple.com/jp/app/id6773755281", primary: true },
             { label: "Privacy", href: LEGAL + "/subscription-cancel-calendar-ios/privacy/" },
@@ -959,6 +1035,9 @@
           name: "過去問周回カウンター",
           category: "学習 / 資格",
           desc: "問題集や過去問を何周したか、点数や正答率と一緒に記録するアプリ。",
+          long: "教材ごとに周回数・正解数・正答率を記録し、点数がどう変わっていったかを一覧で振り返れます。学習時間の記録やタスク管理は含めず、周回記録だけに機能を絞っています。",
+          features: ["教材ごとに周回記録を登録", "正解数・正答率を記録", "周回ごとの正答率推移を確認", "クラウド同期・ログイン不要"],
+          shots: 0,
           links: [
             { label: "App Store", href: "https://apps.apple.com/jp/app/id6771070513", primary: true },
             { label: "Privacy", href: LEGAL + "/past-question-round-counter/privacy-policy.html" },
@@ -970,6 +1049,9 @@
           name: "賞味期限チェック",
           category: "食品 / 期限管理",
           desc: "食品や日用品の期限を登録し、期限切れを防ぐアプリ。",
+          long: "食品名を登録し、開封日と期限日は必要なときだけ記録。期限日までの残り日数がひと目で分かり、期限日を登録した項目には通知でリマインドします。",
+          features: ["食品名・開封日・期限日を登録", "期限日までの残り日数を一覧表示", "期限日がある項目に通知", "ログイン・広告・クラウド同期なし"],
+          shots: 0,
           links: [
             { label: "App Store", href: "https://apps.apple.com/jp/app/id6767770860", primary: true },
             { label: "Privacy", href: LEGAL + "/shomikigen-check/privacy-policy.html" },
@@ -981,6 +1063,9 @@
           name: "自己分析ノート",
           category: "自己分析 / キャリア",
           desc: "経歴・経験・自分の特徴を整理し、自己分析に使えるアプリ。",
+          long: "経歴・経験・資格・興味・得意なことを棚卸しし、外部AIツールに貼り付けやすい自己分析メモとしてコピーできます。履歴書や職務経歴書を完成させるアプリではなく、その前段階の整理に特化しています。",
+          features: ["経歴年表を登録", "経験・資格・興味・得意をリスト化", "自己分析メモとして確認・コピー", "コピー前に内容を自分で確認できる"],
+          shots: 1,
           links: [
             { label: "App Store", href: "https://apps.apple.com/jp/app/%E8%87%AA%E5%B7%B1%E5%88%86%E6%9E%90%E3%83%8E%E3%83%BC%E3%83%88-%E7%B5%8C%E6%AD%B4-%E5%BC%B7%E3%81%BF%E6%95%B4%E7%90%86/id6784313528", primary: true },
             { label: "Privacy", href: LEGAL + "/self-analysis-note/privacy-policy.html" },
@@ -992,6 +1077,9 @@
           name: "Direction Compass",
           category: "方角 / コンパス",
           desc: "目的地や方角を入力して、向かう方向を矢印で確認するアプリ。",
+          long: "地図を開かずに、目的地や特別な方角への方向だけを矢印で表示するコンパスアプリ。恵方・キブラなど20種類の特別な方角にも対応し、iPhoneウィジェットやApple Watch文字盤でもすぐ確認できます。",
+          features: ["目的地の方向を矢印で表示", "恵方・キブラなど20種類の特別な方角", "今日の方角占い(1日ひとつ)", "iPhoneウィジェット / Apple Watch文字盤対応"],
+          shots: 3,
           links: [
             { label: "App Store", href: "https://apps.apple.com/jp/app/direction-compass/id6793981416", primary: true },
             { label: "Privacy", href: LEGAL + "/direction-compass/privacy-policy.html" },
@@ -1003,6 +1091,9 @@
           name: "オーバーレイカメラ",
           category: "写真 / カメラ",
           desc: "ガイド写真を半透明に重ねて、同じ構図で新しい写真を撮影するアプリ。",
+          long: "過去の写真を半透明ガイドとしてカメラに重ね、同じ構図で新しい写真を撮影できます。植物や子どもの成長記録、DIYの進捗記録など、定点観測で変化を残したい場面に。撮影結果にガイド画像は合成されません。",
+          features: ["過去写真をガイドとして半透明表示", "同じ構図で新しい写真を撮影", "撮影後は元画像と並べて比較", "ガイド名・タグで記録を整理"],
+          shots: 3,
           links: [
             { label: "App Store", href: "https://apps.apple.com/jp/app/id6792025464", primary: true },
             { label: "Privacy", href: LEGAL + "/overlay-camera/privacy-policy.html" },
@@ -1014,6 +1105,9 @@
           name: "声メモ",
           category: "音声 / メモ",
           desc: "音声入力を文字で保存し、話した内容を履歴で見返せる音声メモアプリ。",
+          long: "話した内容をリアルタイムに文字起こしし、途中で消えないように自動保存する音声メモアプリ。ショートカットやホーム画面ウィジェット、Apple Watchからもすぐ記録を始められます。",
+          features: ["リアルタイム文字起こし", "録音中も自動保存でメモが消えない", "ショートカット / ウィジェットからすぐ開始", "Apple Watchから音声メモを送信"],
+          shots: 3,
           links: [
             { label: "App Store", href: "https://apps.apple.com/jp/app/%E5%A3%B0%E3%83%A1%E3%83%A2-%E9%9F%B3%E5%A3%B0%E5%85%A5%E5%8A%9B%E3%82%92%E6%96%87%E5%AD%97%E3%81%A7%E4%BF%9D%E5%AD%98/id6798761073", primary: true },
             { label: "Privacy", href: LEGAL + "/voice-stream-memo/privacy-policy.html" },
@@ -1030,6 +1124,9 @@
       const sheetCategory = document.getElementById("sheet-category");
       const sheetTitle = document.getElementById("sheet-title");
       const sheetDesc = document.getElementById("sheet-desc");
+      const sheetLong = document.getElementById("sheet-long");
+      const sheetFeatures = document.getElementById("sheet-features");
+      const sheetGallery = document.getElementById("sheet-gallery");
       const sheetLinks = document.getElementById("sheet-links");
       const sheetClose = document.getElementById("sheet-close");
       let lastFocused = null;
@@ -1124,6 +1221,21 @@
         sheetCategory.textContent = app.category;
         sheetTitle.textContent = app.name;
         sheetDesc.textContent = app.desc;
+        sheetLong.textContent = app.long || "";
+        sheetFeatures.innerHTML = "";
+        (app.features || []).forEach((feature) => {
+          const li = document.createElement("li");
+          li.textContent = feature;
+          sheetFeatures.appendChild(li);
+        });
+        sheetGallery.innerHTML = "";
+        for (let i = 1; i <= (app.shots || 0); i++) {
+          const img = document.createElement("img");
+          img.src = `assets/screenshots/${app.id}/${i}.webp`;
+          img.alt = `${app.name} のスクリーンショット ${i}`;
+          img.loading = "lazy";
+          sheetGallery.appendChild(img);
+        }
         sheet.classList.toggle("is-soon", !!app.soon);
         sheetLinks.innerHTML = "";
         app.links.forEach((link) => {
