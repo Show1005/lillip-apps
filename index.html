@@ -90,7 +90,7 @@
                 "item": {
                   "@type": "MobileApplication",
                   "name": "音階チェッカー",
-                  "description": "マイクの音をリアルタイムに解析し、音名・周波数(Hz)・目標音とのセント差・low / in tune / highの簡易ガイドを表示します。録音や保存はせず、その場で音程を確認することに特化しています。",
+                  "description": "マイクの音をリアルタイムに解析し、音名・周波数(Hz)・目標音とのセント差を確認できます。音階表示付きの動画撮影モードにも対応し、撮影した動画は写真ライブラリへの保存や共有ができます。",
                   "applicationCategory": "MusicApplication",
                   "operatingSystem": "iOS",
                   "url": "https://show1005.github.io/lillip-apps/apps/pitch-note-checker/",
@@ -1055,9 +1055,9 @@
           id: "pitch-note-checker",
           name: "音階チェッカー",
           category: "音声 / 音楽",
-          desc: "マイクで拾った音を解析し、音名をリアルタイムに確認するアプリ。",
-          long: "マイクの音をリアルタイムに解析し、音名・周波数(Hz)・目標音とのセント差・low / in tune / highの簡易ガイドを表示します。録音や保存はせず、その場で音程を確認することに特化しています。",
-          features: ["音名をリアルタイム表示", "周波数(Hz)とセント差を同時表示", "low / in tune / highの簡易ガイド", "基準周波数 A4 をローカルで調整可能"],
+          desc: "マイクの音をリアルタイムに解析し、音階表示付きの動画撮影にも対応した音程確認アプリ。",
+          long: "マイクの音をリアルタイムに解析し、音名・周波数(Hz)・目標音とのセント差を確認できます。音階表示付きの動画撮影モードにも対応し、撮影した動画は写真ライブラリへの保存や共有ができます。",
+          features: ["音名をリアルタイム表示", "周波数(Hz)とセント差を表示", "low / in tune / highの簡易ガイド", "音階表示付き動画撮影・保存"],
           shots: 0,
           links: [
             { label: "App Store", href: "https://apps.apple.com/jp/app/id6779863790", primary: true },
@@ -1192,6 +1192,9 @@
           <span class="name">${app.name}</span>`;
         btn.setAttribute("aria-label", `${app.name} の詳細を見る`);
         btn.addEventListener("click", (e) => {
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+            return;
+          }
           e.preventDefault();
           openSheet(app, btn);
         });
