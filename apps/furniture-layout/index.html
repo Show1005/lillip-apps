@@ -72,6 +72,21 @@
           </div>
         </section>
 
+        <section class="app-promo" aria-label="紹介動画">
+          <div class="promo-frame is-muted">
+            <video class="promo-video" src="../../assets/promotion/MadoriKagu_Promo_2026.mp4" poster="../../assets/promotion/MadoriKagu_Promo_2026_poster.jpg" width="1080" height="1920" muted loop playsinline preload="metadata" aria-label="間取り家具 の紹介動画"></video>
+            <button class="promo-play" type="button" aria-label="再生">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+            </button>
+            <button class="promo-sound" type="button" aria-pressed="false">
+              <svg class="icon-muted" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M16 9.5l5 5m0-5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+              <svg class="icon-sound" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 010 6M18 6.5a7.5 7.5 0 010 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+              <span class="promo-sound-label">音声オン</span>
+            </button>
+            <div class="promo-progress" aria-hidden="true"><span></span></div>
+          </div>
+        </section>
+
         <section class="app-body">
           <p class="app-long">間取り図の写真やPDFを取り込んで縮尺を合わせ、部屋と家具を実寸のまま並べられます。家具が入るか、通路のすき間は足りるかを、引っ越しや模様替えの前に確かめられます。データは端末内保存のみで、外部送信はありません。</p>
           <ul class="app-features">
@@ -94,5 +109,62 @@
         <p><a href="../../">Lillip Apps トップへ</a></p>
       </footer>
     </div>
+
+    <script>
+      (() => {
+        const frame = document.querySelector(".promo-frame");
+        if (!frame) return;
+        const video = frame.querySelector(".promo-video");
+        const playBtn = frame.querySelector(".promo-play");
+        const soundBtn = frame.querySelector(".promo-sound");
+        const soundLabel = frame.querySelector(".promo-sound-label");
+        const bar = frame.querySelector(".promo-progress span");
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        let userPaused = reduceMotion;
+
+        const syncPlay = () => {
+          frame.classList.toggle("is-paused", video.paused);
+          playBtn.setAttribute("aria-label", video.paused ? "再生" : "一時停止");
+        };
+        const syncSound = () => {
+          frame.classList.toggle("is-muted", video.muted);
+          soundBtn.setAttribute("aria-pressed", String(!video.muted));
+          soundLabel.textContent = video.muted ? "音声オン" : "音声オフ";
+        };
+        const tryPlay = () => video.play().catch(() => syncPlay());
+
+        video.addEventListener("play", syncPlay);
+        video.addEventListener("pause", syncPlay);
+        video.addEventListener("volumechange", syncSound);
+        video.addEventListener("timeupdate", () => {
+          if (video.duration) bar.style.transform = `scaleX(${video.currentTime / video.duration})`;
+        });
+
+        const togglePlay = () => {
+          if (video.paused) { userPaused = false; tryPlay(); }
+          else { userPaused = true; video.pause(); }
+        };
+        video.addEventListener("click", togglePlay);
+        playBtn.addEventListener("click", togglePlay);
+
+        soundBtn.addEventListener("click", () => {
+          video.muted = !video.muted;
+          if (!video.muted && video.paused) { userPaused = false; tryPlay(); }
+        });
+
+        // 画面内にあるときだけ再生（ユーザーが止めた場合は再開しない）
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) { if (!userPaused) tryPlay(); }
+            else if (!video.paused) video.pause();
+          }, { threshold: 0.35 }).observe(frame);
+        } else if (!userPaused) {
+          tryPlay();
+        }
+
+        syncPlay();
+        syncSound();
+      })();
+    </script>
   </body>
 </html>
