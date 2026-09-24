@@ -209,34 +209,47 @@ body {
   cursor: pointer;
 }
 
+/* 再生中は左下に小さな一時停止ボタン、停止中は中央に大きな再生ボタン */
 .promo-play {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: calc(100% - 52px);
+  left: 12px;
   display: grid;
   place-items: center;
-  width: 64px;
-  height: 64px;
+  width: 36px;
+  height: 36px;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  background: rgba(6, 10, 22, 0.55);
+  background: rgba(6, 10, 22, 0.6);
   color: var(--text);
   cursor: pointer;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, -50%) scale(0.9);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: top 0.25s ease, left 0.25s ease, width 0.25s ease, height 0.25s ease, border-color 0.2s ease;
 }
 
-.promo-play svg { width: 28px; height: 28px; margin-left: 3px; }
+.promo-play:hover { border-color: rgba(56, 224, 200, 0.6); }
+.promo-play svg { width: 18px; height: 18px; }
+.promo-play .icon-play { display: none; }
 
 .promo-frame.is-paused .promo-play {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translate(-50%, -50%) scale(1);
+  top: calc(50% - 32px);
+  left: calc(50% - 32px);
+  width: 64px;
+  height: 64px;
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(6, 10, 22, 0.55);
+}
+
+.promo-frame.is-paused .promo-play svg { width: 28px; height: 28px; margin-left: 3px; }
+.promo-frame.is-paused .promo-play .icon-play { display: block; }
+.promo-frame.is-paused .promo-play .icon-pause { display: none; }
+
+.promo-play:focus-visible,
+.promo-sound:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
 }
 
 .promo-sound {
@@ -302,6 +315,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .promo-frame.is-muted .promo-sound::after { animation: none; }
+  .promo-play { transition: none; }
 }
 
 .app-body {
